@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="txt_title">Official Immigration Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="lang-switcher">
+        <button onclick="changeLanguage('fa')">فارسی</button>
+        <button onclick="changeLanguage('en')">English</button>
+        <button onclick="changeLanguage('it')">Italiano</button>
+    </div>
+    <img src="logo.png" class="logo" alt="Logo">
+</header>
+
+<div id="loading">
+    <img src="https://i.gifer.com/ZZ5H.gif" width="50" alt="Loading">
+</div>
+
+<div class="login-container">
+    <h2 id="txt_login_header">User Login</h2>
+    
+    <div class="field-group">
+        <input type="text" id="userName" placeholder="User Name">
+        <div id="err_userName" class="error-msg">❌ User not found</div>
+    </div>
+
+    <div class="field-group">
+        <input type="email" id="email" placeholder="Email Address">
+        <div id="err_email" class="error-msg">❌ Email does not match</div>
+    </div>
+
+    <div class="field-group">
+        <input type="password" id="password" placeholder="Password">
+        <div id="err_password" class="error-msg">❌ Incorrect password</div>
+    </div>
+
+    <div class="field-group">
+        <input type="text" id="caseNumber" placeholder="Case Number">
+        <div id="err_caseNumber" class="error-msg">❌ Invalid case number</div>
+    </div>
+
+    <button id="loginBtn">Login to Panel</button>
+</div>
+
+<footer id="main-footer">
+    <div class="footer-sec">
+        <h4 id="txt_footer_1_h">Immigration Lawyers</h4>
+        <a href="#" id="txt_footer_1_a1">Australia Lawyers</a>
+        <a href="#" id="txt_footer_1_a2">UK Lawyers</a>
+        <a href="#" id="txt_footer_1_a3">Schengen Lawyers</a>
+    </div>
+    <div class="footer-sec">
+        <h4 id="txt_footer_2_h">Electronic Contract</h4>
+        <a href="#" id="txt_footer_2_a1">Create New Contract</a>
+        <a href="#" id="txt_footer_2_a2">Get Free Lawyer</a>
+        <a href="#" id="txt_footer_2_a3">Track Request</a>
+    </div>
+    <div class="footer-sec">
+        <h4 id="txt_footer_3_h">Contact Us</h4>
+        <a href="#" id="txt_footer_3_a1">Email Address</a>
+        <a href="#" id="txt_footer_3_a2">WhatsApp</a>
+        <a href="#" id="txt_footer_3_a3">Telegram</a>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
