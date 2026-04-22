@@ -1,119 +1,120 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html dir="ltr" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | VORG GLOBAL</title>
-    <link rel="stylesheet" href="panel-style.css">
+    <title id="txt_title">VORG GLOBAL</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="loadingOverlay">
-        <img src="https://i.gifer.com/ZZ5H.gif" width="60">
-        <p>در حال دریافت امن اطلاعات پرونده...</p>
+
+<div class="main-wrapper">
+    <div class="visual-section">
+        <div class="header-slider">
+            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1526253038957-bce54e05968e?q=80&w=1470&auto=format&fit=crop')"></div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109c0f2?q=80&w=1470&auto=format&fit=crop')"></div>
+        </div>
+        <div class="overlay-content">
+            <img src="https://cdn-icons-png.flaticon.com/512/984/984233.png" class="logo">
+            <h1 class="logo-text">VORG GLOBAL</h1>
+            <p>Follow & Manage your Refugee case file</p>
+        </div>
     </div>
 
-    <div class="panel-layout" id="panelUI" style="display:none;">
-        <aside class="sidebar">
-            <div class="brand">
-                <img src="https://cdn-icons-png.flaticon.com/512/984/984233.png" class="airplane-icon">
-                <h2>VORG PANEL</h2>
+    <div class="form-section">
+        <div class="lang-switcher">
+            <button onclick="changeLanguage('fa')">فارسی</button>
+            <button onclick="changeLanguage('en')">English</button>
+        </div>
+
+        <div class="login-container">
+            <h2 id="txt_login_header">Login to Account</h2>
+            
+            <div class="field-group">
+                <input type="text" id="userName" placeholder="User Name">
+                <div id="err_userName" class="error-msg">❌ User not found</div>
             </div>
-            <div class="user-info">
-                <p id="userNameDisplay">...</p>
-                <span id="caseIdDisplay">...</span>
+            <div class="field-group">
+                <input type="email" id="email" placeholder="Email">
+                <div id="err_email" class="error-msg">❌ Email mismatch</div>
             </div>
-            <button onclick="logout()" class="btn-logout">خروج از سیستم</button>
-        </aside>
-
-        <main class="main-content">
-            <header class="content-header">
-                <h1>پنل رسمی مدیریت کیس</h1>
-            </header>
-
-            <div class="grid-container">
-                <section class="info-card">
-                    <h3>👤 مشخصات فردی متقاضی</h3>
-                    <div id="personalData" class="data-list"></div>
-                </section>
-
-                <section class="info-card">
-                    <h3>⚖️ وضعیت پرونده و وکیل</h3>
-                    <div id="legalData" class="data-list"></div>
-                </section>
-
-                <section class="info-card full-width">
-                    <h3>📂 اسناد و مدارک آنلاین (Google Drive)</h3>
-                    <div id="docsContainer" class="docs-grid"></div>
-                </section>
+            <div class="field-group">
+                <input type="password" id="password" placeholder="Password">
+                <div id="err_password" class="error-msg">❌ Incorrect password</div>
             </div>
-        </main>
+            <div class="field-group">
+                <input type="text" id="caseNumber" placeholder="Case Number">
+                <div id="err_caseNumber" class="error-msg">❌ Invalid case</div>
+            </div>
+
+            <button id="loginBtn">Login to Panel</button>
+        </div>
     </div>
+</div>
 
-    <script>
-        const API_URL = "لینک_اسکریپت_شما"; // آدرس نهایی اسکریپت گوگل را اینجا بگذارید
+<div id="loading"><img src="https://i.gifer.com/ZZ5H.gif" width="50"></div>
 
-        window.onload = function() {
-            const caseNum = localStorage.getItem('userCaseNumber');
-            if (!caseNum) { window.location.href = "index.html"; return; }
+<footer id="main-footer">
+    <div class="footer-sec">
+        <h4 id="txt_footer_1_h">Lawyers</h4>
+        <a href="#">Australia</a> <a href="#">UK</a>
+    </div>
+    <div class="footer-sec">
+        <h4 id="txt_footer_2_h">Contracts</h4>
+        <a href="#">New Request</a>
+    </div>
+    <div class="footer-sec">
+        <h4 id="txt_footer_3_h">Contact</h4>
+        <a href="#">WhatsApp</a>
+    </div>
+</footer>
 
-            fetch(`${API_URL}?action=getPanelData&caseNumber=${caseNum}`)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('loadingOverlay').style.display = 'none';
-                    if (data.success) {
-                        document.getElementById('panelUI').style.display = 'flex';
-                        populateData(data);
-                    } else {
-                        alert("دسترسی غیرمجاز!");
-                        logout();
-                    }
-                })
-                .catch(() => alert("خطا در ارتباط با سرور دیتابیس"));
-        };
+<script>
+    const GOOGLE_API_URL = "https://script.google.com/macros/s/AKfycbyjvuEm6Trv1SokGDrPUQK9dPJoDnzlTVvORxTYB9mgnomGcxdJgLadFSwGaz6EoDesoA/exec";
 
-        function populateData(data) {
-            const p = data.personal;
-            const d = data.docs;
+    // Slider
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 5000);
 
-            document.getElementById('userNameDisplay').innerText = p[0] + " " + p[1];
-            document.getElementById('caseIdDisplay').innerText = "ID: " + p[20];
+    // Multi-lang
+    const translations = {
+        en: { dir: "ltr", login_header: "User Login", login_btn: "Login to Panel", empty: "Fill all fields", loading: "Welcome! Redirecting..." },
+        fa: { dir: "rtl", login_header: "ورود کاربری", login_btn: "ورود به پنل", empty: "تمام فیلدها را پر کنید", loading: "خوش آمدید! در حال انتقال..." }
+    };
 
-            // مشخصات فردی (A-K)
-            document.getElementById('personalData').innerHTML = `
-                <div class="row"><span>نام:</span> <strong>${p[0]}</strong></div>
-                <div class="row"><span>تخلص:</span> <strong>${p[1]}</strong></div>
-                <div class="row"><span>نام پدر:</span> <strong>${p[2]}</strong></div>
-                <div class="row"><span>نمبر تذکره:</span> <strong>${p[8]}</strong></div>
-                <div class="row"><span>ملیت:</span> <strong>${p[4]}</strong></div>
-            `;
+    function changeLanguage(lang) {
+        const t = translations[lang];
+        document.documentElement.dir = t.dir;
+        document.getElementById('txt_login_header').innerText = t.login_header;
+        document.getElementById('loginBtn').innerText = t.login_btn;
+    }
 
-            // وضعیت حقوقی (Q-W)
-            document.getElementById('legalData').innerHTML = `
-                <div class="row"><span>کشور مقصد:</span> <strong>${p[17]}</strong></div>
-                <div class="row"><span>وکیل مسئول:</span> <strong>${p[22]}</strong></div>
-                <div class="row"><span>سریال پیگیری:</span> <strong style="color:blue">${p[20]}</strong></div>
-                <div class="row"><span>وضعیت پرداخت:</span> <strong class="badge">${p[21]}</strong></div>
-            `;
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const user = document.getElementById('userName').value;
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        const caseNum = document.getElementById('caseNumber').value;
 
-            // مدارک Docpic (لینک‌ها)
-            const labels = ["تصویر شخصی", "اپلیکیشن فورم", "قبولی IOM", "قبولی UN", "مصاحبه", "رسید پرداخت", "مدارک وظیفه", "وزارت خارجه", "کیس ورکر", "نامه HR", "توصیه نامه", "قرارداد وکالت", "مشخصات وکیل", "حمایت ویزا", "خطر جانی", "شاهدان", "همکاری", "تصویر ۱", "تصویر ۲", "فامیل"];
-            let html = "";
-            for(let i=0; i<labels.length; i++) {
-                if(d[i] && d[i].toString().includes("http")) {
-                    html += `
-                        <a href="${d[i]}" target="_blank" class="doc-item">
-                            <div class="doc-icon">📂</div>
-                            <div class="doc-name">${labels[i]}</div>
-                        </a>`;
+        if(!user || !email || !pass || !caseNum) return alert("Empty fields!");
+
+        document.getElementById('loading').style.display = 'block';
+        fetch(`${GOOGLE_API_URL}?user=${user}&email=${email}&pass=${pass}&case=${caseNum}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                if(data.success) {
+                    localStorage.setItem('userCaseNumber', caseNum);
+                    window.location.href = "panel.html";
+                } else {
+                    alert("Error in credentials");
                 }
-            }
-            document.getElementById('docsContainer').innerHTML = html || "<p>مدرکی آپلود نشده است.</p>";
-        }
-
-        function logout() {
-            localStorage.clear();
-            window.location.href = "index.html";
-        }
-    </script>
+            });
+    });
+</script>
 </body>
 </html>
