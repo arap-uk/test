@@ -1,9 +1,13 @@
 function doGet(e) {
   const p = e.parameter;
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // اکشن برای لاگین
+  // آدرس شیت‌ها - آی‌دی‌های خود را اینجا قرار دهید
+  const DB_SHEET_ID = "آی_دی_شیت_دیتابیس_اصلی_1"; 
+  const USER_SHEET_ID = SpreadsheetApp.getActiveSpreadsheet().getId(); // شیت لاگین جاری
+
+  // ۱. بخش لاگین (بررسی شیت User-Pass)
   if (!p.action) {
+    const ss = SpreadsheetApp.openById(USER_SHEET_ID);
     const sheet = ss.getSheetByName("user-pass");
     const data = sheet.getDataRange().getValues();
     let response = { success: false, errors: [] };
@@ -25,10 +29,11 @@ function doGet(e) {
     return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(ContentService.MimeType.JSON);
   }
 
-  // اکشن برای دریافت اطلاعات پنل (وقتی action=getPanelData باشد)
+  // ۲. بخش پنل (استخراج دیتا از شیت دیتابیس اصلی بر اساس شماره کیس)
   if (p.action === "getPanelData") {
-    const dataSheet = ss.getSheetByName("Data");
-    const docSheet = ss.getSheetByName("Docpic");
+    const ssDB = SpreadsheetApp.openById(DB_SHEET_ID);
+    const dataSheet = ssDB.getSheetByName("Data");
+    const docSheet = ssDB.getSheetByName("Docpic");
     const caseNum = p.caseNumber;
 
     const dataRows = dataSheet.getDataRange().getValues();
@@ -37,10 +42,10 @@ function doGet(e) {
     let result = { success: false };
 
     for (let i = 1; i < dataRows.length; i++) {
-      if (dataRows[i][20] == caseNum) { // ستون U در شیت Data
+      if (dataRows[i][20] == caseNum) { // ستون U (ایندکس 20)
         result.success = true;
         result.personal = dataRows[i];
-        result.docs = docRows[i]; // فرض بر این است که ردیف‌ها در هر دو شیت یکسان است
+        result.docs = docRows[i];
         break;
       }
     }
