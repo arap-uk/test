@@ -1,84 +1,119 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html dir="rtl" lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="txt_title">Official Immigration Panel</title>
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/826/826070.png">
-    <link rel="stylesheet" href="style.css">
+    <title>Dashboard | VORG GLOBAL</title>
+    <link rel="stylesheet" href="panel-style.css">
 </head>
 <body>
-
-<div class="main-wrapper">
-    <div class="visual-section">
-        <div class="header-slider">
-            <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1526253038957-bce54e05968e?q=80&w=1470&auto=format&fit=crop')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109c0f2?q=80&w=1470&auto=format&fit=crop')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1569091791842-7cfb64e04797?q=80&w=1470&auto=format&fit=crop')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1540339832862-47452993293e?q=80&w=1374&auto=format&fit=crop')"></div>
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1498&auto=format&fit=crop')"></div>
-        </div>
-        <div class="overlay-content">
-            <img src="https://cdn-icons-png.flaticon.com/512/984/984233.png" class="logo" alt="Travel Logo">
-            <h1 class="logo-text">ImmiGlobal</h1>
-            <p>Official Immigration Services & Electronic Contracts</p>
-        </div>
+    <div id="loadingOverlay">
+        <img src="https://i.gifer.com/ZZ5H.gif" width="60">
+        <p>در حال دریافت امن اطلاعات پرونده...</p>
     </div>
 
-    <div class="form-section">
-        <div class="lang-switcher">
-            <button onclick="changeLanguage('fa')">فارسی</button>
-            <button onclick="changeLanguage('en')">English</button>
-            <button onclick="changeLanguage('it')">Italiano</button>
-        </div>
-
-        <div class="login-container">
-            <h2 id="txt_login_header">User Login</h2>
-            
-            <div class="field-group">
-                <input type="text" id="userName" placeholder="User Name">
-                <div id="err_userName" class="error-msg">❌ User not found</div>
+    <div class="panel-layout" id="panelUI" style="display:none;">
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="https://cdn-icons-png.flaticon.com/512/984/984233.png" class="airplane-icon">
+                <h2>VORG PANEL</h2>
             </div>
-
-            <div class="field-group">
-                <input type="email" id="email" placeholder="Email Address">
-                <div id="err_email" class="error-msg">❌ Email mismatch</div>
+            <div class="user-info">
+                <p id="userNameDisplay">...</p>
+                <span id="caseIdDisplay">...</span>
             </div>
+            <button onclick="logout()" class="btn-logout">خروج از سیستم</button>
+        </aside>
 
-            <div class="field-group">
-                <input type="password" id="password" placeholder="Password">
-                <div id="err_password" class="error-msg">❌ Incorrect password</div>
+        <main class="main-content">
+            <header class="content-header">
+                <h1>پنل رسمی مدیریت کیس</h1>
+            </header>
+
+            <div class="grid-container">
+                <section class="info-card">
+                    <h3>👤 مشخصات فردی متقاضی</h3>
+                    <div id="personalData" class="data-list"></div>
+                </section>
+
+                <section class="info-card">
+                    <h3>⚖️ وضعیت پرونده و وکیل</h3>
+                    <div id="legalData" class="data-list"></div>
+                </section>
+
+                <section class="info-card full-width">
+                    <h3>📂 اسناد و مدارک آنلاین (Google Drive)</h3>
+                    <div id="docsContainer" class="docs-grid"></div>
+                </section>
             </div>
-
-            <div class="field-group">
-                <input type="text" id="caseNumber" placeholder="Case Number">
-                <div id="err_caseNumber" class="error-msg">❌ Invalid case number</div>
-            </div>
-
-            <button id="loginBtn">Login to Panel</button>
-        </div>
+        </main>
     </div>
-</div>
 
-<div id="loading">
-    <img src="https://i.gifer.com/ZZ5H.gif" width="50" alt="Loading">
-</div>
+    <script>
+        const API_URL = "لینک_اسکریپت_شما"; // آدرس نهایی اسکریپت گوگل را اینجا بگذارید
 
-<footer id="main-footer">
-    <div class="footer-sec">
-        <h4 id="txt_footer_1_h">Immigration Lawyers</h4>
-        <a href="#">Australia</a> <a href="#">UK</a> <a href="#">Schengen</a>
-    </div>
-    <div class="footer-sec">
-        <h4 id="txt_footer_2_h">Electronic Contract</h4>
-        <a href="#">New Contract</a> <a href="#">Track Request</a>
-    </div>
-    <div class="footer-sec">
-        <h4 id="txt_footer_3_h">Contact Us</h4>
-        <a href="#">Email</a> <a href="#">WhatsApp</a>
-    </div>
-</footer>
+        window.onload = function() {
+            const caseNum = localStorage.getItem('userCaseNumber');
+            if (!caseNum) { window.location.href = "index.html"; return; }
 
-<script src="script.js"></script>
+            fetch(`${API_URL}?action=getPanelData&caseNumber=${caseNum}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    if (data.success) {
+                        document.getElementById('panelUI').style.display = 'flex';
+                        populateData(data);
+                    } else {
+                        alert("دسترسی غیرمجاز!");
+                        logout();
+                    }
+                })
+                .catch(() => alert("خطا در ارتباط با سرور دیتابیس"));
+        };
+
+        function populateData(data) {
+            const p = data.personal;
+            const d = data.docs;
+
+            document.getElementById('userNameDisplay').innerText = p[0] + " " + p[1];
+            document.getElementById('caseIdDisplay').innerText = "ID: " + p[20];
+
+            // مشخصات فردی (A-K)
+            document.getElementById('personalData').innerHTML = `
+                <div class="row"><span>نام:</span> <strong>${p[0]}</strong></div>
+                <div class="row"><span>تخلص:</span> <strong>${p[1]}</strong></div>
+                <div class="row"><span>نام پدر:</span> <strong>${p[2]}</strong></div>
+                <div class="row"><span>نمبر تذکره:</span> <strong>${p[8]}</strong></div>
+                <div class="row"><span>ملیت:</span> <strong>${p[4]}</strong></div>
+            `;
+
+            // وضعیت حقوقی (Q-W)
+            document.getElementById('legalData').innerHTML = `
+                <div class="row"><span>کشور مقصد:</span> <strong>${p[17]}</strong></div>
+                <div class="row"><span>وکیل مسئول:</span> <strong>${p[22]}</strong></div>
+                <div class="row"><span>سریال پیگیری:</span> <strong style="color:blue">${p[20]}</strong></div>
+                <div class="row"><span>وضعیت پرداخت:</span> <strong class="badge">${p[21]}</strong></div>
+            `;
+
+            // مدارک Docpic (لینک‌ها)
+            const labels = ["تصویر شخصی", "اپلیکیشن فورم", "قبولی IOM", "قبولی UN", "مصاحبه", "رسید پرداخت", "مدارک وظیفه", "وزارت خارجه", "کیس ورکر", "نامه HR", "توصیه نامه", "قرارداد وکالت", "مشخصات وکیل", "حمایت ویزا", "خطر جانی", "شاهدان", "همکاری", "تصویر ۱", "تصویر ۲", "فامیل"];
+            let html = "";
+            for(let i=0; i<labels.length; i++) {
+                if(d[i] && d[i].toString().includes("http")) {
+                    html += `
+                        <a href="${d[i]}" target="_blank" class="doc-item">
+                            <div class="doc-icon">📂</div>
+                            <div class="doc-name">${labels[i]}</div>
+                        </a>`;
+                }
+            }
+            document.getElementById('docsContainer').innerHTML = html || "<p>مدرکی آپلود نشده است.</p>";
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>
