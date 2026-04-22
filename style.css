@@ -186,15 +186,3 @@ body {
     .main-content { margin-right: 70px; }
     .grid-form { grid-template-columns: 1fr; }
 }
-
-/* --- تنظیمات ریسپانسیو (Mobile) --- */
-@media (max-width: 900px) {
-    .main-wrapper { flex-direction: column; }
-    .visual-section { height: 250px; flex: none; }
-    .form-section { padding: 20px; }
-    
-    .panel-layout { flex-direction: column; }
-    .sidebar { width: 100%; box-sizing: border-box; }
-    .grid-container { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
-}
