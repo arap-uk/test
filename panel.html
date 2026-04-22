@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Tahoma; background: #f4f7f6; margin: 0; direction: rtl; }
+        .header { background: #0d47a1; color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+        .container { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .full { grid-column: span 2; }
+        .data-row { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; }
+        .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .doc-link { display: block; padding: 10px; background: #e3f2fd; text-decoration: none; color: #0d47a1; text-align: center; border-radius: 5px; font-size: 13px; }
+        .logout { background: #d32f2f; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>VORG GLOBAL - پنل مدیریت کیس</div>
+        <button class="logout" onclick="logout()">خروج</button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h3>👤 اطلاعات هویتی</h3>
+            <div id="pData"></div>
+        </div>
+        <div class="card">
+            <h3>⚖️ وضعیت پرونده</h3>
+            <div id="sData"></div>
+        </div>
+        <div class="card full">
+            <h3>📂 اسناد و مدارک (Google Drive)</h3>
+            <div id="dData" class="docs-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyjvuEm6Trv1SokGDrPUQK9dPJoDnzlTVvORxTYB9mgnomGcxdJgLadFSwGaz6EoDesoA/exec";
+        
+        window.onload = () => {
+            const caseNum = localStorage.getItem('userCaseNumber');
+            if(!caseNum) return window.location.href = "index.html";
+
+            fetch(`${API_URL}?action=getPanelData&caseNumber=${caseNum}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        const p = data.personal;
+                        document.getElementById('pData').innerHTML = `
+                            <div class="data-row"><span>نام و تخلص:</span> <b>${p[0]} ${p[1]}</b></div>
+                            <div class="data-row"><span>نام پدر:</span> <b>${p[2]}</b></div>
+                            <div class="data-row"><span>نمبر پاسپورت:</span> <b>${p[6]}</b></div>
+                        `;
+                        document.getElementById('sData').innerHTML = `
+                            <div class="data-row"><span>کشور مقصد:</span> <b>${p[17]}</b></div>
+                            <div class="data-row"><span>وضعیت هزینه:</span> <b>${p[21]}</b></div>
+                            <div class="data-row"><span>وکیل:</span> <b>${p[22]}</b></div>
+                        `;
+                        
+                        let dHtml = "";
+                        const labels = ["عکس", "فورم", "IOM", "UN", "مصاحبه", "رسید", "وظیفه"];
+                        data.docs.forEach((link, i) => {
+                            if(link && link.toString().includes("http")) {
+                                dHtml += `<a href="${link}" target="_blank" class="doc-link">📄 ${labels[i] || 'سند ' + i}</a>`;
+                            }
+                        });
+                        document.getElementById('dData').innerHTML = dHtml || "سندی یافت نشد.";
+                    }
+                });
+        };
+
+        function logout() { localStorage.clear(); window.location.href = "index.html"; }
+    </script>
+</body>
+</html>
