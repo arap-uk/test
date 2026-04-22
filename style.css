@@ -1,188 +1,132 @@
 :root {
-    --primary: #1a73e8;
-    --primary-dark: #0d47a1;
-    --accent: #00e5ff;
-    --bg-body: #f0f2f5;
-    --sidebar-width: 280px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary: #0d47a1;
+    --bg-light: #ffffff;
+    --text-main: #333;
+    --error: #c62828;
 }
 
-body {
-    margin: 0;
-    font-family: 'Tahoma', 'Segoe UI', sans-serif;
-    background-color: var(--bg-body);
-    direction: rtl;
+body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.main-wrapper {
     display: flex;
-    overflow-x: hidden;
+    flex-direction: row-reverse; /* دسکتاپ: تصویر راست، فرم چپ */
+    min-height: 90vh;
 }
 
-/* --- Sidebar Menu --- */
-.sidebar {
-    width: var(--sidebar-width);
-    height: 100vh;
-    background: linear-gradient(180deg, var(--primary-dark) 0%, #001233 100%);
+/* بخش بصری سمت راست */
+.visual-section {
+    flex: 1.2;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    position: fixed;
-    right: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+}
+
+.header-slider {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+}
+
+.slide {
+    position: absolute; width: 100%; height: 100%;
+    background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 1.5s ease-in-out;
+}
+
+.slide.active { opacity: 1; }
+
+.visual-section::after {
+    content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(to left, rgba(0,0,0,0.2), rgba(13, 71, 161, 0.7));
+    z-index: 2;
+}
+
+.overlay-content {
+    position: relative; z-index: 3; text-align: center;
     padding: 20px;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    transition: var(--transition);
 }
 
-.sidebar-header {
-    text-align: center;
-    padding-bottom: 30px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
+.logo { width: 120px; filter: brightness(0) invert(1); margin-bottom: 15px; }
+.logo-text { font-size: 3rem; margin: 0; letter-spacing: 4px; }
 
-.sidebar-header img {
-    width: 80px;
-    filter: drop-shadow(0 0 10px var(--accent));
-    animation: pulse 2s infinite;
-}
-
-.menu-items {
-    list-style: none;
-    padding: 0;
-    margin-top: 30px;
-}
-
-.menu-items li {
-    margin-bottom: 10px;
-    padding: 12px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    opacity: 0;
-    animation: slideIn 0.5s forwards;
-}
-
-.menu-items li:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(-10px);
-    color: var(--accent);
-}
-
-.menu-items li.active {
-    background: var(--primary);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-/* --- Main Content --- */
-.main-content {
-    margin-right: var(--sidebar-width);
-    flex: 1;
-    padding: 30px;
-    min-height: 100vh;
-}
-
-/* --- Application Form Style --- */
-.form-container {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    max-width: 1000px;
-    margin: 0 auto;
-    animation: fadeIn 0.8s ease-out;
-}
-
-.form-header {
-    border-bottom: 2px solid var(--primary);
-    margin-bottom: 30px;
-    padding-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.grid-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* دو ستونه شبیه فورم */
-    gap: 25px;
-}
-
-.form-group {
+/* بخش فرم سمت چپ */
+.form-section {
+    flex: 0.8;
+    background: var(--bg-light);
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    position: relative;
 }
 
-.form-group label {
-    font-size: 13px;
-    color: #777;
-    margin-bottom: 5px;
+.lang-switcher {
+    position: absolute; top: 20px; left: 20px;
+    display: flex; gap: 10px;
 }
 
-.form-group .value {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
+.lang-switcher button {
+    background: transparent; border: 1px solid #ddd;
+    padding: 5px 15px; border-radius: 20px; cursor: pointer;
+    font-size: 12px; transition: 0.3s;
 }
 
-.full-row {
-    grid-column: span 2;
+.lang-switcher button:hover { background: var(--primary); color: white; }
+
+.login-container {
+    width: 100%;
+    max-width: 380px;
 }
 
-/* --- Status Badges --- */
-.status-pill {
-    padding: 6px 15px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
+h2 { color: var(--primary); font-size: 24px; margin-bottom: 30px; font-weight: 300; }
+
+.field-group { margin-bottom: 20px; width: 100%; }
+
+input {
+    width: 100%; padding: 15px; border: 1px solid #e0e0e0;
+    border-radius: 8px; background: #f8f9fa;
+    box-sizing: border-box; transition: 0.3s;
 }
 
-.status-active { background: #e3f2fd; color: #1565c0; border: 1px solid #1565c0; }
+input:focus { border-color: var(--primary); background: #fff; outline: none; box-shadow: 0 0 10px rgba(13,71,161,0.1); }
 
-/* --- Animations --- */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+button#loginBtn {
+    width: 100%; padding: 16px; background: var(--primary);
+    color: white; border: none; border-radius: 8px;
+    font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.4s;
 }
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
+button#loginBtn:hover { background: #002171; letter-spacing: 1px; }
+
+/* فوتر */
+footer {
+    background: #111; color: #777; padding: 40px 10%;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px; text-align: center;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
+.footer-sec h4 { color: #eee; margin-bottom: 15px; }
+.footer-sec a { color: #555; text-decoration: none; display: block; margin: 5px 0; font-size: 12px; }
 
-/* دکمه خروج انیمیشن دار */
-.logout-btn {
-    margin-top: auto;
-    background: #ff5252;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: var(--transition);
-}
-
-.logout-btn:hover {
-    background: #ff1744;
-    letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(255,82,82,0.4);
-}
-
-/* --- Responsive --- */
+/* ریسپانسیو برای موبایل */
 @media (max-width: 900px) {
-    .sidebar { width: 70px; padding: 10px; }
-    .sidebar span, .sidebar-header h2 { display: none; }
-    .main-content { margin-right: 70px; }
-    .grid-form { grid-template-columns: 1fr; }
+    .main-wrapper { flex-direction: column; }
+    .visual-section { height: 300px; flex: none; }
+    .form-section { flex: none; padding: 60px 20px; }
+    .logo-text { font-size: 2rem; }
+}
+
+.error-msg { color: var(--error); font-size: 11px; display: none; margin-top: 5px; }
+.invalid { border-color: var(--error) !important; }
+
+#loading {
+    display: none; position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 1000;
 }
