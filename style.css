@@ -1,132 +1,225 @@
-:root {
-    --primary: #0d47a1;
-    --bg-light: #ffffff;
-    --text-main: #333;
-    --error: #c62828;
+/* --- متغیرهای مشترک --- */
+:root { 
+    --primary: #0d47a1; 
+    --accent: #1a237e; 
+    --gray: #f4f7f6; 
+    --error: #c62828; 
 }
 
-body, html {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+/* --- تنظیمات عمومی --- */
+body, html { 
+    margin: 0; 
+    padding: 0; 
+    height: 100%; 
+    font-family: 'Tahoma', sans-serif; 
+    background: var(--gray);
 }
 
-.main-wrapper {
-    display: flex;
-    flex-direction: row-reverse; /* دسکتاپ: تصویر راست، فرم چپ */
-    min-height: 90vh;
+/* --- استایل‌های صفحه لاگین (Index) --- */
+.main-wrapper { display: flex; min-height: 90vh; }
+
+.visual-section { 
+    flex: 1.2; 
+    position: relative; 
+    overflow: hidden; 
+    color: white; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
 }
 
-/* بخش بصری سمت راست */
-.visual-section {
-    flex: 1.2;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    overflow: hidden;
-}
-
-.header-slider {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 1;
-}
-
-.slide {
-    position: absolute; width: 100%; height: 100%;
-    background-size: cover; background-position: center;
-    opacity: 0; transition: opacity 1.5s ease-in-out;
+.slide { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    background-size: cover; 
+    opacity: 0; 
+    transition: 1.5s; 
 }
 
 .slide.active { opacity: 1; }
 
-.visual-section::after {
-    content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
-    background: linear-gradient(to left, rgba(0,0,0,0.2), rgba(13, 71, 161, 0.7));
-    z-index: 2;
+.overlay-content { position: relative; z-index: 10; text-align: center; }
+
+.logo { width: 100px; filter: brightness(0) invert(1); }
+
+.form-section { 
+    flex: 0.8; 
+    padding: 40px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    background: white;
 }
 
-.overlay-content {
-    position: relative; z-index: 3; text-align: center;
-    padding: 20px;
+input { 
+    width: 100%; 
+    max-width: 350px; 
+    padding: 15px; 
+    margin: 10px 0; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-sizing: border-box;
 }
 
-.logo { width: 120px; filter: brightness(0) invert(1); margin-bottom: 15px; }
-.logo-text { font-size: 3rem; margin: 0; letter-spacing: 4px; }
-
-/* بخش فرم سمت چپ */
-.form-section {
-    flex: 0.8;
-    background: var(--bg-light);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    position: relative;
+#loginBtn { 
+    width: 100%; 
+    max-width: 350px; 
+    padding: 15px; 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: bold;
 }
 
-.lang-switcher {
-    position: absolute; top: 20px; left: 20px;
-    display: flex; gap: 10px;
+#loading { 
+    display: none; 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 999;
 }
 
-.lang-switcher button {
-    background: transparent; border: 1px solid #ddd;
-    padding: 5px 15px; border-radius: 20px; cursor: pointer;
-    font-size: 12px; transition: 0.3s;
+footer { 
+    background: #111; 
+    color: #777; 
+    padding: 30px; 
+    display: flex; 
+    justify-content: space-around; 
+    text-align: center; 
 }
 
-.lang-switcher button:hover { background: var(--primary); color: white; }
+footer a { color: #555; text-decoration: none; display: block; margin: 5px 0; }
 
-.login-container {
-    width: 100%;
-    max-width: 380px;
+/* --- استایل‌های پنل مدیریت (Panel) --- */
+.panel-layout { display: flex; min-height: 100vh; direction: rtl; }
+
+.sidebar { 
+    width: 260px; 
+    background: var(--primary); 
+    color: white; 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
 }
 
-h2 { color: var(--primary); font-size: 24px; margin-bottom: 30px; font-weight: 300; }
+.brand { text-align: center; margin-bottom: 40px; }
 
-.field-group { margin-bottom: 20px; width: 100%; }
-
-input {
-    width: 100%; padding: 15px; border: 1px solid #e0e0e0;
-    border-radius: 8px; background: #f8f9fa;
-    box-sizing: border-box; transition: 0.3s;
+.airplane-icon { 
+    width: 60px; 
+    filter: brightness(0) invert(1); 
+    animation: slowRotate 10s linear infinite; 
 }
 
-input:focus { border-color: var(--primary); background: #fff; outline: none; box-shadow: 0 0 10px rgba(13,71,161,0.1); }
-
-button#loginBtn {
-    width: 100%; padding: 16px; background: var(--primary);
-    color: white; border: none; border-radius: 8px;
-    font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.4s;
+@keyframes slowRotate { 
+    from { transform: rotate(0); } 
+    to { transform: rotate(360deg); } 
 }
 
-button#loginBtn:hover { background: #002171; letter-spacing: 1px; }
-
-/* فوتر */
-footer {
-    background: #111; color: #777; padding: 40px 10%;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px; text-align: center;
+.user-info { 
+    text-align: center; 
+    border-top: 1px solid rgba(255,255,255,0.1); 
+    padding-top: 20px; 
 }
 
-.footer-sec h4 { color: #eee; margin-bottom: 15px; }
-.footer-sec a { color: #555; text-decoration: none; display: block; margin: 5px 0; font-size: 12px; }
+.btn-logout { 
+    margin-top: auto; 
+    padding: 12px; 
+    background: #d32f2f; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+}
 
-/* ریسپانسیو برای موبایل */
+.main-content { flex: 1; padding: 40px; direction: rtl; }
+
+.content-header { border-bottom: 3px solid var(--primary); margin-bottom: 30px; }
+
+.grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+.full-width { grid-column: span 2; }
+
+.info-card { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+}
+
+.info-card h3 { 
+    color: var(--primary); 
+    margin-top: 0; 
+    border-right: 4px solid var(--primary); 
+    padding-right: 10px; 
+}
+
+.data-list .row { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 12px 0; 
+    border-bottom: 1px solid #eee; 
+}
+
+.badge { 
+    background: #e8f5e9; 
+    color: #2e7d32; 
+    padding: 3px 8px; 
+    border-radius: 4px; 
+    font-size: 13px; 
+}
+
+.docs-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+    gap: 15px; 
+    margin-top: 20px; 
+}
+
+.doc-item { 
+    text-decoration: none; 
+    background: #fff; 
+    border: 1px solid #ddd; 
+    padding: 15px; 
+    border-radius: 8px; 
+    text-align: center; 
+    transition: 0.3s; 
+    color: #333;
+}
+
+.doc-item:hover { 
+    border-color: var(--primary); 
+    background: #e3f2fd; 
+    transform: translateY(-3px); 
+}
+
+.doc-icon { font-size: 28px; margin-bottom: 8px; }
+
+.doc-name { font-size: 12px; color: #333; font-weight: bold; }
+
+#loadingOverlay { 
+    position: fixed; 
+    inset: 0; 
+    background: white; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000; 
+}
+
+/* --- تنظیمات ریسپانسیو (Mobile) --- */
 @media (max-width: 900px) {
     .main-wrapper { flex-direction: column; }
-    .visual-section { height: 300px; flex: none; }
-    .form-section { flex: none; padding: 60px 20px; }
-    .logo-text { font-size: 2rem; }
-}
-
-.error-msg { color: var(--error); font-size: 11px; display: none; margin-top: 5px; }
-.invalid { border-color: var(--error) !important; }
-
-#loading {
-    display: none; position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%); z-index: 1000;
+    .visual-section { height: 250px; flex: none; }
+    .form-section { padding: 20px; }
+    
+    .panel-layout { flex-direction: column; }
+    .sidebar { width: 100%; box-sizing: border-box; }
+    .grid-container { grid-template-columns: 1fr; }
+    .full-width { grid-column: span 1; }
 }
