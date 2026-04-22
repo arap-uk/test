@@ -2,7 +2,7 @@ function doGet(e) {
   const p = e.parameter;
   
   // آدرس شیت‌ها - آی‌دی‌های خود را اینجا قرار دهید
-  const DB_SHEET_ID = "آی_دی_شیت_دیتابیس_اصلی_1"; 
+  const DB_SHEET_ID = "AKfycbyjvuEm6Trv1SokGDrPUQK9dPJoDnzlTVvORxTYB9mgnomGcxdJgLadFSwGaz6EoDesoA"; 
   const USER_SHEET_ID = SpreadsheetApp.getActiveSpreadsheet().getId(); // شیت لاگین جاری
 
   // ۱. بخش لاگین (بررسی شیت User-Pass)
